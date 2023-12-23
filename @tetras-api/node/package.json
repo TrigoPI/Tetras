@@ -5,11 +5,12 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "dependencies": {
-    "dolphin": "file:../../dolphin"
-  },
   "devDependencies": {
     "@types/node": "^20.10.4",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "dolphin": "file:../../dependencies/dolphin",
+    "rest-client": "file:../../dependencies/rest-client"
   }
 }
