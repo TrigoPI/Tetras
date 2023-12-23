@@ -1,23 +1,28 @@
-import { Get, Post, Response, Route, SERVICE_MACRO, Service, ServiceClass, ServiceLuncher, WebMacro, WebString } from "dolphin";
+import { Get, Logger, Post, Response, Route, SERVICE_MACRO, Service, ServiceClass, ServiceLuncher, WebMacro, WebString } from "dolphin";
 import { HttpResponse, RestClient } from "rest-client";
 
 import { ServiceDesc } from "dolphin/dist/types/service-module-types";
 
 import { ConfDesc, Input, Type } from "../../core/ConfigType";
 import Conf from "../../core/Conf";
-import ConfRegistery from "../../core/ConfRegistery";
+import ConfRegistry from "../../core/ConfRegistry";
 
 @Service("api-core", "/api-core", Conf.SERVICES["api-core"]["ip"], Conf.SERVICES["api-core"]["port"])
 export default class ApiCore extends ServiceClass {
-    private luncher: ServiceLuncher
-    private registery: ConfRegistery<{
+    private luncher: ServiceLuncher;
+    private logger: Logger;
+
+    private registry: ConfRegistry<{
         ip: ConfDesc,
-        port: ConfDesc
+        port: ConfDesc,
+        auto_start: ConfDesc
     }>
     
     public override async OnStart(): Promise<void> {
         this.luncher = ServiceLuncher.GetInstance();
-        this.registery = new ConfRegistery({
+        this.logger = new Logger(this.GetName());
+
+        this.registry = new ConfRegistry({
             port: { 
                 type: Type.Number,
                 input: Input.Text,
@@ -41,7 +46,21 @@ export default class ApiCore extends ServiceClass {
             }
         });
 
-        this.registery.SetAll(Conf.SERVICES["api-core"]);
+        this.registry.SetAll(Conf.SERVICES[this.GetName()]);
+        await this.StartSubServices();
+    }
+
+    private async StartSubServices(): Promise<void> {
+        if (!Conf.SERVICES["api-core"]["auto_start"]) return;
+        
+        for (let name of Conf.SERVICES["api-core"]["auto_start"]) {
+            if (this.luncher.ServiceExist(name)) {
+                try { await this.luncher.StartService(name); } 
+                catch (e: any) { this.logger.Error(e); }
+            } else {
+                this.logger.Error(`Cannot find service ${name}`);
+            }
+        }
     }
 
     @Get
@@ -60,7 +79,7 @@ export default class ApiCore extends ServiceClass {
         if (!this.luncher.IsRunning(name)) return Response.NotFound();
 
         if (name == this.GetName()) {
-            const confDesc: Record<string, ConfDesc> = this.registery.GetAll();
+            const confDesc: Record<string, ConfDesc> = this.registry.GetAll();
             return Response.Json<Record<string, ConfDesc>>(confDesc);
         } 
         
@@ -85,11 +104,14 @@ export default class ApiCore extends ServiceClass {
 
         if (name == this.GetName()) {
             for (const key in params) {
-                if (this.registery.KeyExist(key)){
-                    this.registery.Set(<any>key, params[key]);
-                    Conf.Write("api-core", this.registery.GetAll())
+                if (this.registry.KeyExist(key)){
+                    this.registry.Set(<any>key, params[key]);
                 }
             }
+            
+            await Conf.Write(this.GetName(), this.registry.GetAll());
+            
+            return Response.Ok();
         } 
         
         try {

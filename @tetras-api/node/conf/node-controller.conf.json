@@ -1,1 +1,1 @@
-{"camera_path":"/camera","camera_ip":"localhost","camera_port":4000}
+{"camera_path":"/camera","camera_ip":"localhost","camera_port":4001,"gateway_path":"/lora","gateway_ip":"localhost","gateway_port":4002}

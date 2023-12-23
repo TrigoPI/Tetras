@@ -87,17 +87,19 @@
     >
         {#if !loading}
             <ul class="flex flex-wrap gap-4 justify-around w-full font-bold">
-                <li>
-                    <button class="duration-100 hover:scale-110">
-                        <a 
-                            class="flex" 
-                            href="/dashboard/{name}"
-                        >
-                            <Fa icon={ faGear } size="1.5rem" />
-                            <p class="px-2">Configuration</p>
-                        </a>
-                    </button>
-                </li>
+                {#if status == "running"}    
+                    <li>
+                        <button class="duration-100 hover:scale-110">
+                            <a 
+                                class="flex" 
+                                href="/dashboard/{name}"
+                            >
+                                <Fa icon={ faGear } size="1.5rem" />
+                                <p class="px-2">Configuration</p>
+                            </a>
+                        </button>
+                    </li>
+                {/if}
                 <li>
                     <button
                         class="flex duration-100 hover:scale-110"

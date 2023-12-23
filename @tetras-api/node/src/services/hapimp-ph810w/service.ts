@@ -1,4 +1,4 @@
-import { Get, MediaType, Response, Route, Service, ServiceClass, Status } from "dolphin";
+import { Get, Response, Route, Service, ServiceClass } from "dolphin";
 import { CameraName, ImageDesc } from "./type";
 import { randomUUID } from "crypto";
 
@@ -12,6 +12,12 @@ export default class HapimpPh810w extends ServiceClass {
     }   
 
     @Get
+    @Route("/ping")
+    public async Ping(): Promise<Response> {
+        return Response.Ok();
+    }
+
+    @Get
     @Route("/model")
     public async GetModel(): Promise<Response> {
         const name: string = this.name;
@@ -23,7 +29,7 @@ export default class HapimpPh810w extends ServiceClass {
     public async GetImageList(): Promise<Response> {
         const imgsDesc: ImageDesc[] = [];
         
-        for (let i: number = 0; i < 5; i++) {
+        for (let i: number = 0; i < 10; i++) {
             const name: string = `${randomUUID()}.jpg`;
             const date: string = new Date().toISOString();
             const id: string = randomUUID();
@@ -32,10 +38,4 @@ export default class HapimpPh810w extends ServiceClass {
 
         return Response.Json<ImageDesc[]>(imgsDesc);
     }
-
-    // @Get
-    // @Route("/test/")
-    // public async Test(): Promise<Response> {
-    //     return new Response("<h1>HEY</h1>", MediaType.PLAIN_HTML, Status.OK);
-    // }
 }

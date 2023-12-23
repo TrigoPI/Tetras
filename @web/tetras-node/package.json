@@ -35,6 +35,7 @@
 	"dependencies": {
 		"@fortawesome/free-brands-svg-icons": "^6.5.1",
 		"@fortawesome/free-solid-svg-icons": "^6.5.1",
+		"exception": "file:../../dependencies/exception",
 		"rest-client": "file:../../dependencies/rest-client",
 		"svelte-fa": "^3.0.4"
 	}

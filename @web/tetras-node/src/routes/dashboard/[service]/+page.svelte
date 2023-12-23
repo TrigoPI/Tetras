@@ -1,29 +1,41 @@
 <script lang="ts">
+	import { AppErrors } from "@utils/errors";
+    import { BuildForm } from "@utils/type-checker";
+	import Routes from "@utils/routes";
+
     import Button from "@components/button.svelte";
 	import InputCheckbox from "@components/input-checkbox.svelte";
     import InputText from "@components/input-text.svelte"
-	import Routes from "@utils/routes";
 	
-    import { BuildForm, TypeValid } from "@utils/type-checker";
-
+	import { Exception } from "exception";
 	import { RestClient, type HttpResponse } from "rest-client";
+
 	import { onMount } from "svelte";
+	import { goto } from "$app/navigation";
+	import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+	import Fa from "svelte-fa";
 
     export let data: Record<string, any>;
 
     let configs: Record<string, any>[] = [];
+    let waiting: boolean = false;
 
     const onSubmit = async (e: SubmitEvent): Promise<void> => {
         if (!e.target) return; 
         
-        const formData: FormData = new FormData(<HTMLFormElement>e.target);
-        const json: Record<string, any> = BuildForm(formData, configs);
-        
-        // try {
-        //     await RestClient.Post(`${Routes.API_CORE_URL}/api-core/service/configuration/save/${data.service}`, json);
-        // } catch (e: any) {
-        //     console.log(e);
-        // }
+        try {
+            const formData: FormData = new FormData(<HTMLFormElement>e.target);
+            const json: Record<string, any> = BuildForm(formData, configs);
+            await RestClient.Post(`${Routes.API_CORE_URL}/api-core/service/configuration/save/${data.service}`, json);
+            
+            await goto("/dashboard");
+        } catch (e: any) {
+            const exception: Exception = Exception.EnsureError(e);
+            
+            if (exception.type == AppErrors.INVALID_TYPE) {
+                console.log(exception.context);
+            }
+        }
     } 
 
     onMount(async () => {
@@ -58,16 +70,31 @@
                             {#each conf.checkboxes as name }
                                 <InputCheckbox 
                                     name={ name }
+                                    checked={ (conf.value != undefined)? conf.value.includes(name) : false }
                                 />
                             {/each}
                         </div>
                     {/if}
                 {/each}
                 <div class="flex gap-12 justify-end py-8">
-                    <Button title="Save" type="submit" />
+                    <Button
+                        disabled={ waiting } 
+                        type="submit"
+                    >
+                        {#if !waiting}
+                            <span>Save</span>
+                        {:else}
+                            <Fa 
+                                icon={ faSpinner }
+                                spin
+                            />
+                        {/if}
+                    </Button>
 
                     <a href="/dashboard">
-                        <Button title="Exit" />
+                        <Button>
+                            <span>Exit</span>
+                        </Button>
                     </a>
                 </div>
             </form>

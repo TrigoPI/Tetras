@@ -1,6 +1,6 @@
 import { ConfDesc, Type } from "./ConfigType";
 
-export default class ConfRegistery<T> {
+export default class ConfRegistry<T> {
     private conf: { [ P in keyof T ]: ConfDesc };
 
     public constructor(conf: { [ P in keyof T ]: ConfDesc }) {

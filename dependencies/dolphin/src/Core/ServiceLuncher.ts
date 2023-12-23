@@ -96,7 +96,7 @@ export default class ServiceLuncher {
     }
 
     public async StopAllService(): Promise<void> {
-        for (const [_, service] of this.services) await this.OnStopService(service)
+        for (const [_, service] of this.services) await this.OnStopService(service);
         await this.httpServerManager.StopAll();        
     }
 
@@ -114,7 +114,7 @@ export default class ServiceLuncher {
 
     private async OnStopService(data: ServiceData): Promise<void> {
         try {
-            await data.service.OnStart();
+            await data.service.OnStop();
         } catch (err: any) {
             this.logger.Error(`Failed to execute OnStop ${data.service.GetName()}`);
             this.logger.Error(err);

@@ -18,15 +18,14 @@
             placeholder="localhost:8080"
         />
         
-        <Button 
-            type="submit"
-            title="Save"
-        />
+        <Button type="submit">
+            <span>Save</span>
+        </Button>
 
         <a href="/dashboard">
-            <Button 
-                title="Dashboard"
-            />
+            <Button>
+                <span>Dashboard</span>
+            </Button>
         </a>
     </form>
 </div>

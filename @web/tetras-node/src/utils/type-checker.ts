@@ -1,3 +1,5 @@
+import { InvalidTypeError } from "./errors";
+
 export function TypeValid(value: any, type: "number" | "string"): boolean {
     switch (type) {
         case "string": return typeof value == "string"
@@ -5,8 +7,10 @@ export function TypeValid(value: any, type: "number" | "string"): boolean {
     }
 }
 
-export function ConvertInputToType(value: any, type: "number" | "string"): any {
-    if (!TypeValid(value, type)) throw new Error(`value ${value} is not typeof ${type}`);
+export function ConvertInputToType(value: string, type: "number" | "string"): any | undefined{
+    if (!TypeValid(value, type)) throw new InvalidTypeError(value, type);
+    if (value.length == 0) return undefined
+
     switch (type) {
         case "string": return value
         case "number": return Number(value)
@@ -17,9 +21,11 @@ export function BuildForm(formData: FormData, descs: Record<string, any>[]): Rec
     let datas: Record<string, any> = {};
 
     for (const desc of descs) {
+        
         switch (desc.input) {
             case "text":
-                datas[desc.name] = ConvertInputToType(formData.get(desc.name), desc.type);
+                const value: FormDataEntryValue | null = formData.get(desc.name);
+                if (value) datas[desc.name] = ConvertInputToType(value.toString(), desc.type);
             break;
             case "checkbox":
                 datas[desc.name] = [];

@@ -1,22 +1,27 @@
 <script lang="ts">
-    export let title: string;
-    export let type: "button" | "submit" = "button"
+    export let type: "button" | "submit" = "button";
+    export let disabled: boolean = false;
+    export let onClick: () => void = () => {};
 </script>
 
 <button 
-    class="app-shadow w-36 h-12 rounded-md text-white"
+    class="app-shadow w-36 h-12 rounded-md text-white {disabled? "no-event" : ""}"
     type={ type }
+    disabled={ disabled }
+    on:click={ onClick }
 >
-    <p>{ title }</p>
+    <div class="w-full h-full flex justify-center items-center">
+        <slot />
+    </div>
 </button>
 
 <style>
-    button > p {
+    button > div {
         opacity: 0.5;
         transition: 200ms;
     }
 
-    button:hover > p {
+    button:hover > div {
         opacity: 1;
         color: var(--card-color);
     }

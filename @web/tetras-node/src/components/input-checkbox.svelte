@@ -3,6 +3,7 @@
 	import Fa from "svelte-fa";
 
     export let name: string
+    export let checked: boolean = false;
 </script>
 
 <div class="flex gap-4 items-center relative">
@@ -11,6 +12,7 @@
         type="checkbox" 
         id={ name }
         name={ name }
+        checked={ checked }
     />
     <div class="absolute flex items-center justify-center">
         <div>
