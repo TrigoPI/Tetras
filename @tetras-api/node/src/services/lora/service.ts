@@ -1,4 +1,4 @@
-import { Get, Logger, Post, Response, Route, SERVICE_MACRO, Service, ServiceClass, WebMacro, WebParam } from "dolphin";
+import { Get, Logger, Post, Response, Route, SERVICE_MACRO, Service, ServiceClass, WebMacro } from "dolphin";
 import ConfRegistry from "../../core/ConfRegistry";
 import { ConfDesc, Input, Type } from "../../core/ConfigType";
 import Conf from "../../core/Conf";
