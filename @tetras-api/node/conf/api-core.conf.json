@@ -1,1 +1,1 @@
-{"port":8080,"ip":"localhost","auto_start":["hapimp-ph810w","lora","node-controller"]}
+{"port":8080,"ip":"0.0.0.0","auto_start":[]}
