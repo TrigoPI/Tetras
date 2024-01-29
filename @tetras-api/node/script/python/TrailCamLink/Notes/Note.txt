@@ -1,0 +1,10 @@
+1   - http://192.168.1.8/Setup?GetBatteryStatus
+    - http://192.168.1.8/Setup?GetAllSettingsList
+    
+2   - http://192.168.1.8/SetMode?VideoCapture
+    - http://192.168.1.8/SetMode?PhotoCapture
+    - http://192.168.1.8/SetMode?Storage
+    - http://192.168.1.8/Setup?TimeDateYYMMDDhhmm=[date]
+
+3   - http://192.168.1.8/Storage?GetDirFileInfo
+    - http://192.168.1.8/Storage?GetFilePage=[int]
