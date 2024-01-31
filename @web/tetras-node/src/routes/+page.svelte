@@ -10,22 +10,29 @@
     } 
 </script>
 
-<div>
-    <form on:submit|preventDefault={ (e) => onSubmit(e) }>
-        <InputText 
-            title="API Core"
-            name="api-core"
-            placeholder="localhost:8080"
-        />
+<div class="h-screen">
+    <form
+        class="h-full flex flex-col gap-4 items-center justify-center" 
+        on:submit|preventDefault={ (e) => onSubmit(e) }
+    >
+        <div class="w-96">
+            <InputText 
+                title="API Core"
+                name="api-core"
+                placeholder="localhost:8080"
+            />
+        </div>
         
-        <Button type="submit">
-            <span>Save</span>
-        </Button>
-
-        <a href="/dashboard">
-            <Button>
-                <span>Dashboard</span>
+        <div class="flex gap-8">
+            <Button type="submit">
+                <span>Save</span>
             </Button>
-        </a>
+    
+            <a href="/dashboard">
+                <Button>
+                    <span>Dashboard</span>
+                </Button>
+            </a>
+        </div>
     </form>
 </div>
