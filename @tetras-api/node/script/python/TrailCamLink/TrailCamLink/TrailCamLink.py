@@ -4,7 +4,7 @@ import platform
 import subprocess
 import os
 
-from wifi import Cell, Scheme
+import wifimangement_linux as wifi 
 from typing import Callable
 
 from TrailCamLink.BLE.BLEClient import BLEClient 
@@ -131,14 +131,9 @@ class TrailCamLink:
         os.system(f'netsh wlan connect name="{self.wifiSSID}" ssid="{self.wifiSSID}" interface=Wi-Fi')
 
     def _connect_wifi_linux(self) -> None:
-        scheme = Scheme.find('wlan0', self.wifiSSID)
+        wifi.on()
+        wifi.connect(self.wifiSSID, self.key)
 
-        if (scheme == None):
-            cell = list(Cell.all('wlan0'))[0]
-            scheme = Scheme.for_cell('wlan0', self.wifiSSID, cell, self.key)
-            scheme.save()
-        
-        scheme.activate()
 
     async def __write_device_id(self, id: str) -> None:
         deviceId = bytearray()
