@@ -9,25 +9,25 @@ chmod u+x ./@tetras-api/node/script/python/TrailCamLink/install.sh
 
 echo "installation de dolphin..."
 cd ./dependencies/dolphin/
-./dependencies/dolphin/install.sh
+./install.sh
 cd -
 
 echo "installation de exception..."
 cd ./dependencies/exception/
-./dependencies/exception/install.sh
+./install.sh
 cd -
 
 echo "installation de rest-client..."
 cd ./dependencies/rest-client/
-./dependencies/rest-client/install.sh
+./install.sh
 cd -
 
 echo "installation de tetras-api..."
 cd ./@tetras-api/node/
-./@tetras-api/node/install.sh
+./install.sh
 cd -
 
 echo "installation de TrailCamLink..."
 cd ./@tetras-api/node/script/python/TrailCamLink/
-./@tetras-api/node/script/python/TrailCamLink/install.sh
+./install.sh
 cd -
