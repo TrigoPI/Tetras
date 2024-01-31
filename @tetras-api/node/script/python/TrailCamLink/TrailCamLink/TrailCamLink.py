@@ -131,9 +131,11 @@ class TrailCamLink:
         os.system(f'netsh wlan connect name="{self.wifiSSID}" ssid="{self.wifiSSID}" interface=Wi-Fi')
 
     def _connect_wifi_linux(self) -> None:
-        wifi.on()
-        wifi.connect(self.wifiSSID, self.key)
-
+        try: 
+            wifi.on()
+            wifi.connect(self.wifiSSID, self.key)
+        except:
+            print(f"cannot find ${self.wifiSSID}")
 
     async def __write_device_id(self, id: str) -> None:
         deviceId = bytearray()
