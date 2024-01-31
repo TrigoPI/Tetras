@@ -27,7 +27,7 @@ cd ./@tetras-api/node/
 ./install.sh
 cd -
 
-echo "installation de TrailCamLink..."
-cd ./@tetras-api/node/script/python/TrailCamLink/
-./install.sh
-cd -
+# echo "installation de TrailCamLink..."
+# cd ./@tetras-api/node/script/python/TrailCamLink/
+# ./install.sh
+# cd -
