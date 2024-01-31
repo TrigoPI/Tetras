@@ -131,7 +131,7 @@ class TrailCamLink:
         os.system(f'netsh wlan connect name="{self.wifiSSID}" ssid="{self.wifiSSID}" interface=Wi-Fi')
 
     def _connect_wifi_linux(self) -> None:
-        scheme = Scheme.find('wlan0', 'home')
+        scheme = Scheme.find('wlan0', self.wifiSSID)
 
         if (scheme == None):
             scheme.activate()
