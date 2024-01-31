@@ -46,11 +46,8 @@ let HapimpPh810w = class HapimpPh810w extends dolphin_1.ServiceClass {
                         reject();
                         return;
                     }
-                    if (stderr) {
+                    if (stderr)
                         console.log(stderr);
-                        reject();
-                        return;
-                    }
                     console.log(stdout);
                     resolve();
                 });

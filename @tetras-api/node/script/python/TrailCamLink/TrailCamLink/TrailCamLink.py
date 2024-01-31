@@ -89,7 +89,6 @@ class TrailCamLink:
         while (not connected):
             if (platform.system().lower() == "windows"): self._connect_wifi_windows()
             else: self._connect_wifi_linux()
-            
             await asyncio.sleep(3.0)
             connected = self.__ping_camera()
         

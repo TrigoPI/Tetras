@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
 import { ExecException, exec } from "child_process";
-import { randomUUID } from "crypto";
 
 import { Get, Post, Response, Route, Service, ServiceClass, WebString } from "dolphin";
 import { CAMERA_MODE, CameraName, ImageDesc } from "./type";
@@ -33,12 +32,7 @@ export default class HapimpPh810w extends ServiceClass {
                     return;
                 }
 
-                if (stderr) {
-                    console.log(stderr);
-                    reject();
-                    return;
-                }
-
+                if (stderr) console.log(stderr);
                 console.log(stdout);
                 resolve();
             });
