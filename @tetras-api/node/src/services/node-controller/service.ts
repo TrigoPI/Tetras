@@ -101,8 +101,7 @@ export default class NodeController extends ServiceClass {
                 this.logger.Info(`${url} online`);
                 this.servicesOnline.set(name, true);
                 
-                await this.OnServiceOnline(name);
-                clearInterval(id);
+                await this.OnServiceOnline(id);
             } catch {
                 failed++;
                 this.logger.Warning(`${url} unreachable`);
@@ -117,7 +116,9 @@ export default class NodeController extends ServiceClass {
         this.intervalId.push(id);
     }
 
-    private async OnServiceOnline(name: string): Promise<void> {
+    private async OnServiceOnline(internvalId: NodeJS.Timeout): Promise<void> {
+        clearInterval(internvalId);
+
         for (const serviceName of this.servicesName) {
             if (!this.servicesOnline.get(serviceName)) return;
         }
@@ -127,11 +128,20 @@ export default class NodeController extends ServiceClass {
 
     private async OnAllServicesOnline(): Promise<void> {
         try {
+            this.logger.Info(`All services online`);
+            
+            await RestClient.Post(`http://${Conf.SERVICES[this.GetName()]["camera_ip"]}:${Conf.SERVICES[this.GetName()]["camera_port"]}${Conf.SERVICES[this.GetName()]["camera_path"]}/start`);
             const imgResponse: HttpResponse = await RestClient.Get(`http://${Conf.SERVICES[this.GetName()]["camera_ip"]}:${Conf.SERVICES[this.GetName()]["camera_port"]}${Conf.SERVICES[this.GetName()]["camera_path"]}/img/list`);
+            
             const date: string = new Date().toISOString();
-            const camera: Record<string, any> = imgResponse.Json();
+            const camera: Record<string, any>[] = imgResponse.Json();
+            
+            
             const datas: LoRaData = { camera, date };
             await RestClient.Post(`http://${Conf.SERVICES[this.GetName()]["gateway_ip"]}:${Conf.SERVICES[this.GetName()]["gateway_port"]}${Conf.SERVICES[this.GetName()]["gateway_path"]}/send`, datas);
+        
+        
+            for (const img of camera) await RestClient.Get(`http://${Conf.SERVICES[this.GetName()]["camera_ip"]}:${Conf.SERVICES[this.GetName()]["camera_port"]}${Conf.SERVICES[this.GetName()]["camera_path"]}/download/${img.id}`);
         } catch (e: any){
             this.logger.Error(e);
         }

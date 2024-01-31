@@ -1,6 +1,10 @@
 import requests
 import asyncio
+import platform
+import subprocess
 import os
+
+import wifimangement_linux as wifi
 
 from typing import Callable
 
@@ -22,6 +26,7 @@ class TrailCamLink:
         self.client = BLEClient(mac) 
         self.wifiOn = False
         self.cameraUrl = "http://192.168.1.8"
+        self.key = "12345678"
         self.wifiSSID = "TrailCam9B4A$123"
         self.write  = "0000ffe9-0000-1000-8000-00805f9b34fb"
         self.notify = "0000ffe4-0000-1000-8000-00805f9b34fb"
@@ -80,8 +85,16 @@ class TrailCamLink:
         while (not self.wifiOn): await asyncio.sleep(10.0)
 
     async def connect_to_wifi(self) -> None:
-        os.system(f'netsh wlan connect name="{self.wifiSSID}" ssid="{self.wifiSSID}" interface=Wi-Fi')
-        await asyncio.sleep(3.0)
+        connected = False
+
+        while (not connected):
+            if (platform.system().lower() == "windows"): self._connect_wifi_windows()
+            else: self._connect_wifi_linux()
+            
+            await asyncio.sleep(3.0)
+            connected = self.__ping_camera()
+        
+        print("Connected")
 
     async def __notify_callback(self, _,  data: bytearray) -> None:
         valueHex = data.hex()
@@ -109,6 +122,18 @@ class TrailCamLink:
         if (apok in valueHex):
             await self.__write_ok()
             self.wifiOn = True
+
+    def __ping_camera(self) -> bool:
+        param = "-n" if platform.system().lower() == "windows" else "-c"
+        command = ["ping", param, "1", "192.168.1.8"]
+        return subprocess.call(command) == 0
+
+    def _connect_wifi_windows(self) -> None:
+        os.system(f'netsh wlan connect name="{self.wifiSSID}" ssid="{self.wifiSSID}" interface=Wi-Fi')
+
+    def _connect_wifi_linux(self) -> None: 
+        wifi.on()
+        wifi.connect(self.wifiSSID, self.key)
 
     async def __write_device_id(self, id: str) -> None:
         deviceId = bytearray()
