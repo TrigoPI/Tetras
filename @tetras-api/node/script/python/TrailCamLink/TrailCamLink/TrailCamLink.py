@@ -134,7 +134,6 @@ class TrailCamLink:
         scheme = Scheme.find('wlan0', self.wifiSSID)
 
         if (scheme == None):
-            scheme.activate()
             cell = Cell.all('wlan0')[0]
             scheme = Scheme.for_cell('wlan0', self.wifiSSID, cell, self.key)
             scheme.save()
