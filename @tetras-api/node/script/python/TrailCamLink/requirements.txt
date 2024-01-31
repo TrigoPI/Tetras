@@ -1,2 +1,2 @@
 bleak==0.21.1
-wifimangement_linux==0.0.1
+wifi==65.5.0
